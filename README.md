@@ -73,3 +73,8 @@ python scrap.py 1996
 # Exit from virtual Environment
 deactivate
 ```
+## 📝 Candidate instructions
+1. Create a private [GitHub](https://help.github.com/en/articles/create-a-repo) repository containing the content of this repository
+2. Complete the [Task](#task) :tada:
+3. [Invite](https://help.github.com/en/articles/inviting-collaborators-to-a-personal-repository) me to your private repo
+4. Let me know you've completed the exercise
