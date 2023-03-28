@@ -15,7 +15,7 @@ with english Subtitles. Each Episode has date-time of last change.
 2. List should include drama name, genre, actors and last SUB or RAW episode.
 3. If there are RAW and SUB Episodes it should show last RAW and last SUB
 4. Program should list all dramas not only 36 from the first page. (Pagination)
-5. Program should support date-time parameter which will list all episodes with newest date-time.
+5. Program should support date-time parameter which will list all episodes released after specified date-time.
 
 This is how result should looks like
 ```
