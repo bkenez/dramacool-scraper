@@ -19,15 +19,18 @@ with english Subtitles. Each Episode has date-time of last change.
 
 This is how result should looks like
 ```
+python scrap.py --year 1996 --country Korean (optional: --newer date-time)
 First Love - Korean - 1996 - Romance - Bae Yong Joon (1972), Choi Ji Woo (1975), Lee Seung Yeon (1968), Choi Soo Jong (1962)
   RAW First Love Episode 65 2015-03-05 09:34:25
   SUB First Love Episode 61 2015-03-05 09:34:25
 ```
 
 ## Bonus points
-1. Program accepts instead of year range of years for example 1990-1999
+1. Program accepts instead of year range of years for example 1990-1999: `python scrap.py --years 1990-1996 --country Korean` 
 2. Program accepts additionally genre parameter to list only dramas with choosen genre
+`python scrap.py --year 1996 --country Korean --genre Romance` 
 3. Program accepts only Actor and list all dramas with him/her
+`python scrap.py --act "Bae Yong Joon"`
 
 ## Python
 
