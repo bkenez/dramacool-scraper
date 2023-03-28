@@ -19,7 +19,7 @@ with english Subtitles. Each Episode has date-time of last change.
 
 This is how result should looks like
 ```
-First Love - Korean - 1996 - Romance . Bae Yong Joon (1972), Choi Ji Woo (1975), Lee Seung Yeon (1968), Choi Soo Jong (1962)
+First Love - Korean - 1996 - Romance - Bae Yong Joon (1972), Choi Ji Woo (1975), Lee Seung Yeon (1968), Choi Soo Jong (1962)
   RAW First Love Episode 65 2015-03-05 09:34:25
   SUB First Love Episode 61 2015-03-05 09:34:25
 ```
