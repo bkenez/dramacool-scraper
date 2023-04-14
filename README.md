@@ -4,9 +4,9 @@ The incredible amount of data on the Internet is a rich resource for any field o
 To effectively harvest that data, you’ll need to become skilled at web scraping. Our take home test is designed
 to evaluate real scenario. Dramacool (watchasian.id) is a web site which lists asian dramas and movies.
 You would like to check from the command line status of dramas for year or range of years.
-You can see all dramas for chosen year (example: 1996) under: https://watchasian.id/released-in-1996.html.
+You can see all dramas for chosen year (example: 1996) under: https://dramacool.cy/released-in-1996.html.
 Please take into account that this view displays only first 36 dramas so pagination should be taken into account.
-If you go to drama details (example: first-love) https://watchasian.id/drama-detail/first-love, you will see some
+If you go to drama details (example: first-love) https://dramacool.cy/drama-detail/first-love, you will see some
 drama details like Country, Status, Released, Genre, Actors (images) and list of episodes: RAW - withouts and SUB
 with english Subtitles. Each Episode has date-time of last change.
 
