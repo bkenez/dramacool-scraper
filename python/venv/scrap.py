@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 
 year = sys.argv[1] # 1967
-base_url = "https://watchasian.id"
+base_url = "https://dramacool.cy"
 
 URL = f"{base_url}/released-in-{year}.html"
 page = requests.get(URL)
