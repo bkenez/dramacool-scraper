@@ -13,7 +13,7 @@ with english Subtitles. Each Episode has date-time of last change.
 ## Core requirements
 1. List all dramas for chosen year and country: For example scrap.py --year 1996 -country Korea
 2. List should include drama name, genre, actors and last SUB or RAW episode.
-3. If there are RAW and SUB Episodes it should show last RAW and last SUB
+3. If there are RAW and SUB Episodes in one drama, it should show last RAW and last SUB
 4. Program should list all dramas not only 36 from the first page. (Pagination)
 5. Program should support date-time parameter which will list all episodes released after specified date-time.
 
@@ -29,8 +29,15 @@ First Love - Korean - 1996 - Romance - Bae Yong Joon (1972), Choi Ji Woo (1975),
 1. Program accepts instead of year range of years for example 1990-1999: `python scrap.py --years 1990-1996 --country Korean` 
 2. Program accepts additionally genre parameter to list only dramas with choosen genre
 `python scrap.py --year 1996 --country Korean --genre Romance` 
-3. Program accepts only Actor and list all dramas with him/her
+3. Program supports actor/actress parameter and list all dramas with him/her
 `python scrap.py --act "Bae Yong Joon"`
+4. Program displays progress using eg. 'alive_progress'
+5. Program displays only episodes (lines starting with SUB or RAW) ignoring Drama title, country etc
+```
+python scrap.py --year 1996 --country Korean --ep (optional: --newer date-time)
+  RAW First Love Episode 65 2015-03-05 09:34:25
+  SUB First Love Episode 61 2015-03-05 09:34:25
+```
 
 ## Python
 
