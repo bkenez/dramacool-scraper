@@ -27,7 +27,7 @@ class Drama:
     self.latest_sub = latest_sub
     self.episode_list = episode_list
   
-  def print_data(self, ep, newer=False):
+  def print_data(self, ep, newer):
     if not ep:
       if self.actors:
         print(f'{self.title} - {self.year} - {self.country} - {self.genre} - {self.actors}')
@@ -42,6 +42,9 @@ class Drama:
       for episode, time in self.episode_list.items():
         if time > newer:
           print(f'{episode} {time}')
+
+def regex_escaper(string):
+  return string.replace("(","\\(").replace(")","\\)").replace(".","\\.")
 
 def parse_dramas_per_year(year,bar):
   drama_results = []
@@ -114,7 +117,10 @@ def parse_dramas_on_page(soup, drama_results, bar):
       latest_sub = None
 
     drama_episode_list = dict()
-    drama_episodes = drama_soup.find_all('h3',string=re.compile(drama['title'] + ' Episode'))
+    drama_episodes = drama_soup.find_all('h3',string=re.compile(regex_escaper(drama['title']) + ' Episode'))
+    #speacial case handling with inconsistent work/episode titling
+    if not drama_episodes:
+      drama_episodes = drama_soup.find_all('h3',string=re.compile(regex_escaper(drama['title'].split('(')[0].strip()) + ' Episode'))
 
     for episode in drama_episodes:
       episode_title = episode.text.strip()
@@ -154,6 +160,6 @@ for drama in drama_results:
     continue
   if args.act and args.act.lower() not in drama.actors.lower():
     continue
-
-  drama.print_data(args.ep, args.newer)
+  
+  drama.print_data(ep=args.ep, newer=args.newer)
 
