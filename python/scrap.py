@@ -72,6 +72,62 @@ def parse_dramas_per_year(year,bar):
 
   return drama_results
 
+def get_drama_info(soup, info):
+  return soup.find(href=re.compile(info)).text.strip()
+
+def get_drama_actors(soup):
+  drama_actors = soup.find_all(onclick=re.compile("star"))
+  actor_list = []
+  for actor in drama_actors:
+    actor_list.append(actor.text.strip())
+  actor_list = ', '.join(actor_list)
+
+  return actor_list
+
+def get_drama_latest_episodes(soup):
+  try:
+    drama_latest_raw = soup.find('span', {'class': 'type RAW'}).next_sibling.next_sibling
+    drama_latest_raw_time = soup.find('span', {'class': 'type RAW'}).next_sibling.next_sibling.next_sibling.next_sibling
+  except AttributeError:
+    drama_latest_raw = None
+    drama_latest_raw_time = None
+    pass
+
+  try:
+    drama_latest_sub = soup.find('span', {'class': 'type SUB'}).next_sibling.next_sibling
+    drama_latest_sub_time = soup.find('span', {'class': 'type SUB'}).next_sibling.next_sibling.next_sibling.next_sibling
+  except AttributeError:
+    drama_latest_sub = None
+    drama_latest_sub_time = None 
+    pass
+
+  if drama_latest_raw:
+    latest_raw = 'RAW ' + drama_latest_raw.text.strip() + ' ' + drama_latest_raw_time.text.strip()
+  else:
+    latest_raw = None
+
+  if drama_latest_sub:
+    latest_sub = 'SUB ' + drama_latest_sub.text.strip() + ' ' + drama_latest_sub_time.text.strip()
+  else:
+    latest_sub = None
+
+  return latest_raw,latest_sub
+
+def get_drama_episode_list(soup, title):
+  drama_episode_list = dict()
+  drama_episodes = soup.find_all('h3',string=re.compile(regex_escaper(title) + ' Episode'))
+  #speacial case handling with inconsistent work/episode titling
+  if not drama_episodes:
+    drama_episodes = soup.find_all('h3',string=re.compile(regex_escaper(title.split('(')[0].strip()) + ' Episode'))
+
+  for episode in drama_episodes:
+    episode_title = episode.text.strip()
+    episode_time = episode.next_sibling.next_sibling.text.strip()
+    episode_type = episode.previous_sibling.previous_sibling.text.strip()
+    drama_episode_list[f'{episode_type} {episode_title}'] = episode_time
+
+  return drama_episode_list
+
 def parse_dramas_on_page(soup, drama_results, bar):
   drama_links = soup.find_all('a', {'class': 'img', 'href': True})
 
@@ -80,61 +136,20 @@ def parse_dramas_on_page(soup, drama_results, bar):
     drama_page = requests.get(drama_url)
     drama_soup = BeautifulSoup(drama_page.content, "html.parser")
 
-    drama_country = drama_soup.find(href=re.compile("country"))
-    drama_year = drama_soup.find(href=re.compile("released"))
-    drama_genre = drama_soup.find(href=re.compile("genre"))
-    drama_actors = drama_soup.find_all(onclick=re.compile("star"))
-
-    actor_list = []
-    for actor in drama_actors:
-      actor_list.append(actor.text.strip())
-    actor_list = ', '.join(actor_list)
-
-    try:
-      drama_latest_raw = drama_soup.find('span', {'class': 'type RAW'}).next_sibling.next_sibling
-      drama_latest_raw_time = drama_soup.find('span', {'class': 'type RAW'}).next_sibling.next_sibling.next_sibling.next_sibling
-    except AttributeError:
-      drama_latest_raw = None
-      drama_latest_raw_time = None
-      pass
-
-    try:
-      drama_latest_sub = drama_soup.find('span', {'class': 'type SUB'}).next_sibling.next_sibling
-      drama_latest_sub_time = drama_soup.find('span', {'class': 'type SUB'}).next_sibling.next_sibling.next_sibling.next_sibling
-    except AttributeError:
-      drama_latest_sub = None
-      drama_latest_sub_time = None 
-      pass
-
-    if drama_latest_raw:
-      latest_raw = 'RAW ' + drama_latest_raw.text.strip() + ' ' + drama_latest_raw_time.text.strip()
-    else:
-      latest_raw = None
-
-    if drama_latest_sub:
-      latest_sub = 'SUB ' + drama_latest_sub.text.strip() + ' ' + drama_latest_sub_time.text.strip()
-    else:
-      latest_sub = None
-
-    drama_episode_list = dict()
-    drama_episodes = drama_soup.find_all('h3',string=re.compile(regex_escaper(drama['title']) + ' Episode'))
-    #speacial case handling with inconsistent work/episode titling
-    if not drama_episodes:
-      drama_episodes = drama_soup.find_all('h3',string=re.compile(regex_escaper(drama['title'].split('(')[0].strip()) + ' Episode'))
-
-    for episode in drama_episodes:
-      episode_title = episode.text.strip()
-      episode_time = episode.next_sibling.next_sibling.text.strip()
-      episode_type = episode.previous_sibling.previous_sibling.text.strip()
-      drama_episode_list[f'{episode_type} {episode_title}'] = episode_time
+    drama_country = get_drama_info(drama_soup, "country")
+    drama_year =  get_drama_info(drama_soup, "released")
+    drama_genre =  get_drama_info(drama_soup, "genre")
+    drama_actors = get_drama_actors(drama_soup)
+    latest_eps = get_drama_latest_episodes(drama_soup)
+    drama_episode_list = get_drama_episode_list(drama_soup,drama['title'])
 
     drama_results.append(Drama( drama['title']
-                              ,drama_country.text.strip()
-                              ,drama_year.text.strip()
-                              ,drama_genre.text.strip()
-                              ,actor_list
-                              ,latest_raw
-                              ,latest_sub
+                              ,drama_country
+                              ,drama_year
+                              ,drama_genre
+                              ,drama_actors
+                              ,latest_eps[0]
+                              ,latest_eps[1]
                               ,drama_episode_list))
     bar()
 
