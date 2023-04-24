@@ -84,6 +84,12 @@ def parse_dramas_on_page(soup, drama_results, bar):
     drama_year = drama_soup.find(href=re.compile("released"))
     drama_genre = drama_soup.find(href=re.compile("genre"))
     drama_actors = drama_soup.find_all(onclick=re.compile("star"))
+
+    actor_list = []
+    for actor in drama_actors:
+      actor_list.append(actor.text.strip())
+    actor_list = ', '.join(actor_list)
+
     try:
       drama_latest_raw = drama_soup.find('span', {'class': 'type RAW'}).next_sibling.next_sibling
       drama_latest_raw_time = drama_soup.find('span', {'class': 'type RAW'}).next_sibling.next_sibling.next_sibling.next_sibling
@@ -99,12 +105,6 @@ def parse_dramas_on_page(soup, drama_results, bar):
       drama_latest_sub = None
       drama_latest_sub_time = None 
       pass
-
-    
-    actor_list = []
-    for actor in drama_actors:
-      actor_list.append(actor.text.strip())
-    actor_list = ', '.join(actor_list)
 
     if drama_latest_raw:
       latest_raw = 'RAW ' + drama_latest_raw.text.strip() + ' ' + drama_latest_raw_time.text.strip()
