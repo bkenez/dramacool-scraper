@@ -175,15 +175,47 @@ def get_total_dramas(url):
   drama_links = soup.find_all('a', {'class': 'img', 'href': True})
 
   return (pages-1) * 36 + int(len(drama_links))
+    
+if "-" in args.year:
+  start_year = int(args.year.split("-")[0])
+  end_year = int(args.year.split("-")[1])
 
-    while start_year <= end_year:
-      drama_results = drama_results + parse_dramas_per_year(start_year, bar)
-      start_year += 1
+if args.act:
+  actor = args.act.lower().strip().replace(" ","-")
+  URL = f"{base_url}/star/{actor}"
+  soup = soupify_url(URL)
+  total = get_total_dramas(URL)
 
-  else:
+  with alive_bar(total) as bar:
+    parse_dramas_on_page(soup, drama_results, bar)
+
+
+elif "-" in args.year:
+    year = start_year
+    total = 0
+
+    while year <= end_year:
+      total += get_total_dramas(f"{base_url}/released-in-{year}.html")
+      year += 1
+
+    year = start_year
+
+    with alive_bar(total) as bar:
+      while year <= end_year:
+        drama_results = drama_results + parse_dramas_per_year(start_year, bar)
+        year += 1
+
+else:
+  total = get_total_dramas(f"{base_url}/released-in-{args.year}.html")  
+  with alive_bar(total) as bar:
     drama_results = parse_dramas_per_year(args.year, bar)
 
 for drama in drama_results:
+  if "-" in args.year:
+    if int(drama.year) < start_year or int(drama.year) > end_year:
+      continue
+  elif drama.year != args.year:
+    continue 
   if args.genre and drama.genre.lower() != args.genre.lower():
     continue
   if args.country and drama.country.lower() != args.country.lower():
@@ -191,5 +223,5 @@ for drama in drama_results:
   if args.act and args.act.lower() not in drama.actors.lower():
     continue
   
-  drama.print_data(ep=args.ep, newer=args.newer)
+  drama.print_data(args.ep, args.newer, args.noact)
 
