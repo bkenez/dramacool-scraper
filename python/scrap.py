@@ -159,10 +159,22 @@ def parse_dramas_on_page(soup, drama_results, bar):
 drama_results = []
 args = parser.parse_args()
 
-with alive_bar() as bar:
-  if "-" in args.year:
-    start_year = int(args.year.split("-")[0])
-    end_year = int(args.year.split("-")[1])
+def get_total_dramas(url):
+  soup = soupify_url(url)
+
+  pages = 1
+  try:
+    last_page = soup.find('li', {'class': 'last'}).a['href']
+    pages = int(last_page.split('=')[1])
+  except AttributeError:
+    pass
+
+  if pages > 1:
+    soup = soupify_url(f"{url}?page={pages}")
+
+  drama_links = soup.find_all('a', {'class': 'img', 'href': True})
+
+  return (pages-1) * 36 + int(len(drama_links))
 
     while start_year <= end_year:
       drama_results = drama_results + parse_dramas_per_year(start_year, bar)
