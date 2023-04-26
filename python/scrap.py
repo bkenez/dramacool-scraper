@@ -47,6 +47,10 @@ class Drama:
 def regex_escaper(string):
   return string.replace("(","\\(").replace(")","\\)").replace(".","\\.")
 
+def soupify_url(url):
+    page = requests.get(url)
+    return BeautifulSoup(page.content, "html.parser")
+  
 def parse_dramas_per_year(year,bar):
   drama_results = []
   URL = f"{base_url}/released-in-{year}.html"
@@ -64,9 +68,7 @@ def parse_dramas_per_year(year,bar):
 
   bar.title(f"Getting dramas from {year}...")
   while cursor <= pages:
-    URL = f"{base_url}/released-in-{year}.html?page={cursor}"
-    page = requests.get(URL)
-    soup = BeautifulSoup(page.content, "html.parser")
+    soup = soupify_url(f"{base_url}/released-in-{year}.html?page={cursor}")
     
     parse_dramas_on_page(soup, drama_results, bar)
     cursor += 1  
