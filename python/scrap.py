@@ -14,6 +14,7 @@ parser.add_argument('--newer')
 parser.add_argument('--country')
 parser.add_argument('--genre')
 parser.add_argument('--act')
+parser.add_argument('--noact', action='store_true')
 parser.add_argument('--ep', action='store_true')
 
 class Drama:
@@ -27,9 +28,9 @@ class Drama:
     self.latest_sub = latest_sub
     self.episode_list = episode_list
   
-  def print_data(self, ep, newer):
+  def print_data(self, ep, newer, list_actors):
     if not ep:
-      if self.actors:
+      if self.actors and not list_actors:
         print(f'{self.title} - {self.year} - {self.country} - {self.genre} - {self.actors}')
       else:
         print(f'{self.title} - {self.year} - {self.country} - {self.genre}')
