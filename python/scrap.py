@@ -9,7 +9,7 @@ base_url = "https://dramacool.cy"
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--year', '--years', required=True)
+parser.add_argument('--year', '--years')
 parser.add_argument('--newer')
 parser.add_argument('--country')
 parser.add_argument('--genre')
@@ -156,9 +156,6 @@ def parse_dramas_on_page(soup, drama_results, bar):
                               ,drama_episode_list))
     bar()
 
-drama_results = []
-args = parser.parse_args()
-
 def get_total_dramas(url):
   soup = soupify_url(url)
 
@@ -175,8 +172,11 @@ def get_total_dramas(url):
   drama_links = soup.find_all('a', {'class': 'img', 'href': True})
 
   return (pages-1) * 36 + int(len(drama_links))
+
+drama_results = []
+args = parser.parse_args()
     
-if "-" in args.year:
+if args.year and "-" in args.year:
   start_year = int(args.year.split("-")[0])
   end_year = int(args.year.split("-")[1])
 
@@ -211,11 +211,12 @@ else:
     drama_results = parse_dramas_per_year(args.year, bar)
 
 for drama in drama_results:
-  if "-" in args.year:
-    if int(drama.year) < start_year or int(drama.year) > end_year:
-      continue
-  elif drama.year != args.year:
-    continue 
+  if args.year:
+    if "-" in args.year:
+      if int(drama.year) < start_year or int(drama.year) > end_year:
+        continue
+    elif drama.year != args.year:
+      continue 
   if args.genre and drama.genre.lower() != args.genre.lower():
     continue
   if args.country and drama.country.lower() != args.country.lower():
