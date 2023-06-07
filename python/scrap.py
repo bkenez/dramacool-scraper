@@ -202,7 +202,7 @@ elif "-" in args.year:
 
     with alive_bar(total) as bar:
       while year <= end_year:
-        drama_results = drama_results + parse_dramas_per_year(start_year, bar)
+        drama_results = drama_results + parse_dramas_per_year(year, bar)
         year += 1
 
 else:
