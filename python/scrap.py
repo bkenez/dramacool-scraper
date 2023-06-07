@@ -194,9 +194,16 @@ elif "-" in args.year:
     year = start_year
     total = 0
 
-    while year <= end_year:
-      total += get_total_dramas(f"{base_url}/released-in-{year}.html")
-      year += 1
+    if start_year > end_year:
+      print("The start of the year range cannot be lower than the end")
+
+
+    with alive_bar(total = end_year - start_year) as bar:
+      while year <= end_year:
+        bar.title(f"Counting results from {year}...")
+        total += get_total_dramas(f"{base_url}/released-in-{year}.html")
+        year += 1
+        bar()
 
     year = start_year
 
