@@ -1,71 +1,6 @@
 # Web Scraper
 
-The incredible amount of data on the Internet is a rich resource for any field of research or personal interest.
-To effectively harvest that data, you’ll need to become skilled at web scraping. Our take home test is designed
-to evaluate real scenario. Dramacool (watchasian.id) is a web site which lists asian dramas and movies.
-You would like to check from the command line status of dramas for year or range of years.
-You can see all dramas for chosen year (example: 1996) under: https://dramacool.cy/released-in-1996.html.
-Please take into account that this view displays only first 36 dramas so pagination should be taken into account.
-If you go to drama details (example: first-love) https://dramacool.cy/drama-detail/first-love, you will see some
-drama details like Country, Status, Released, Genre, Actors (images) and list of episodes: RAW - withouts and SUB
-with english Subtitles. Each Episode has date-time of last change.
-
-## Core requirements
-1. List all dramas for chosen year and country: For example scrap.py --year 1996 -country Korea
-2. List should include drama name, genre, actors and last SUB or RAW episode.
-3. If there are RAW and SUB Episodes in one drama, it should show last RAW and last SUB
-4. Program should list all dramas not only 36 from the first page. (Pagination)
-5. Program should support date-time parameter which will list all episodes released after specified date-time.
-
-This is how result should looks like
-```
-python scrap.py --year 1996 --country Korean (optional: --newer date-time)
-First Love - Korean - 1996 - Romance - Bae Yong Joon (1972), Choi Ji Woo (1975), Lee Seung Yeon (1968), Choi Soo Jong (1962)
-  RAW First Love Episode 65 2015-03-05 09:34:25
-  SUB First Love Episode 61 2015-03-05 09:34:25
-```
-
-## Bonus points
-1. Program accepts instead of year range of years for example 1990-1999: `python scrap.py --years 1990-1996 --country Korean` 
-2. Program accepts additionally genre parameter to list only dramas with choosen genre
-`python scrap.py --year 1996 --country Korean --genre Romance` 
-3. Program supports actor/actress parameter and list all dramas with him/her
-`python scrap.py --act "Bae Yong Joon"`
-4. Program displays progress using eg. 'alive_progress'
-5. Program displays only episodes (lines starting with SUB or RAW) ignoring Drama title, country etc
-```
-python scrap.py --year 1996 --country Korean --ep (optional: --newer date-time)
-  RAW First Love Episode 65 2015-03-05 09:34:25
-  SUB First Love Episode 61 2015-03-05 09:34:25
-```
-
-## Python
-
-To give you more idea how it should work you can look into python code which you can use as well as a base for
-further development.
-Problems with current code:
-- No support for pagination (example for 1996 displays only 36 results from page 1)
-- No support for country (displays all dramas from choosen year)
-- ugly formatting
-```
-27
-First Love https://watchasian.id/drama-detail/first-love
-Bae Yong Joon (1972)
-Choi Ji Woo (1975)
-Lee Seung Yeon (1968)
-Choi Soo Jong (1962)
-SUB
-
-First Love Episode 66
-2015-03-05 09:34:25
-SUB
-
-First Love Episode 65
-```
-
-- displays all episodes not only the last one
-- no support for RAW, SUB
-- no support for date-time episodes
+This is a past excercise I have completed, moved to a public repo in order to demonstrate python skills.
 
 ### Setup
 
@@ -83,8 +18,73 @@ python scrap.py 1996
 # Exit from virtual Environment
 deactivate
 ```
-## 📝 Candidate instructions
-1. Create a private [GitHub](https://help.github.com/en/articles/create-a-repo) repository containing the content of this repository
-2. Complete the [Task](#task) :tada:
-3. [Invite](https://help.github.com/en/articles/inviting-collaborators-to-a-personal-repository) me to your private repo
-4. Let me know you've completed the exercise
+
+## NAME
+
+scrap.py - Python web scraping program for extracting information from the Dramacool website
+
+## SYNOPSIS
+
+```
+scrap.py [--year YEAR | --years YEAR_RANGE] [--newer DATE_TIME] [--country COUNTRY] [--genre GENRE]
+         [--act ACTOR] [--noact] [--ep]
+```
+
+## DESCRIPTION
+
+The `scrap.py` program is designed to scrape information from the Dramacool website, a platform for Asian dramas. It allows users to retrieve drama details based on various criteria such as release year, country, genre, and actors. By default, the program lists the most recent episodes in SUB (subtitled) and RAW (without subtitles) formats.
+
+If the `--act` flag is used, the program changes its behavior and first scrapes the specified actor's page as the endpoint. This optimization allows for faster retrieval of results specific to the actor.
+
+## OPTIONS
+
+* `--year YEAR`, `--years YEAR_RANGE`
+
+  Specifies a single year or a range of years for filtering the results. The `YEAR` argument should be in the format "YYYY," while the `YEAR_RANGE` argument should be in the format "YYYY-YYYY." The program will only display dramas that fall within the specified year(s).
+
+* `--newer DATE_TIME`
+
+  Filters the episodes by listing only those released after the specified `DATE_TIME`. The `DATE_TIME` argument should be in the format "YYYY-MM-DD HH:MM:SS."
+
+* `--country COUNTRY`
+
+  Filters the dramas based on the specified `COUNTRY`. Only dramas from the specified country will be listed.
+
+* `--genre GENRE`
+
+  Filters the dramas based on the specified `GENRE`. Only dramas of the specified genre will be listed.
+
+* `--act ACTOR`
+
+  Filters the dramas by listing only those that feature the specified `ACTOR`. Only dramas with the specified actor will be displayed. The program optimizes the scraping process by first scraping the actor's page as the endpoint to retrieve results faster.
+
+* `--noact`
+
+  By default, the program lists the actors associated with each drama. This flag can be used to suppress the actor listing, resulting in a more concise output.
+
+* `--ep`
+
+  By default, the program lists only the most recent SUB and RAW episodes. If this flag is present, all episodes, including older ones, will be listed.
+
+## EXAMPLES
+
+```
+scrap.py --years 1996 --country Japanese --genre comedy
+```
+
+List all Japanese comedy dramas released in the year 1996:
+
+```
+Supermarket Woman - 1996 - Japanese - Comedy
+  SUB Supermarket Woman Episode 1 2015-06-01 12:16:53
+Free and Easy 8 - 1996 - Japanese - Comedy
+  RAW Free and Easy 8 Episode 1 2016-06-02 14:49:46
+Shota no Sushi - 1996 - Japanese - Comedy - Kashiwabara Takashi (1977), Sugimoto Tetta (1965), Imada Koji (1966), Kitahara Masaki (1940)
+  SUB Shota no Sushi Episode 17 2014-12-03 14:18:09
+Shall We Dance? - 1996 - Japanese - Comedy
+  SUB Shall We Dance? Episode 1 2019-06-05 19:06:48
+```
+
+## SEE ALSO
+
+For more information about web scraping using Python, refer to the documentation of libraries such as BeautifulSoup and Requests.
