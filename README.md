@@ -36,6 +36,8 @@ The `scrap.py` program is designed to scrape information from the Dramacool webs
 
 If the `--act` flag is used, the program changes its behavior and first scrapes the specified actor's page as the endpoint. This optimization allows for faster retrieval of results specific to the actor.
 
+Either the --year/--years or --act flag must be present in the command for the program to execute successfully.
+
 ## OPTIONS
 
 * `--year YEAR`, `--years YEAR_RANGE`
