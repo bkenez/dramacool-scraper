@@ -64,7 +64,7 @@ If the `--act` flag is used, the program changes its behavior and first scrapes 
 
 * `--ep`
 
-  By default, the program lists only the most recent SUB and RAW episodes. If this flag is present, all episodes, including older ones, will be listed.
+  By default, the program lists only the most recent SUB and RAW episodes in addition to the other information. If this flag is present, only episode information will be listed. This flag is compatible with `--newer DATE_TIME`
 
 ## EXAMPLES
 
