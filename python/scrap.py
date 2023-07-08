@@ -175,61 +175,65 @@ def get_total_dramas(url):
 
 drama_results = []
 args = parser.parse_args()
-    
-if args.year and "-" in args.year:
-  start_year = int(args.year.split("-")[0])
-  end_year = int(args.year.split("-")[1])
 
-if args.act:
-  actor = args.act.lower().strip().replace(" ","-")
-  URL = f"{base_url}/star/{actor}"
-  soup = soupify_url(URL)
-  total = get_total_dramas(URL)
+if not args.year and not args.act:
+  print("A year( range) or actor must be specified.")
 
-  with alive_bar(total) as bar:
-    parse_dramas_on_page(soup, drama_results, bar)
+else:      
+  if args.year and "-" in args.year:
+    start_year = int(args.year.split("-")[0])
+    end_year = int(args.year.split("-")[1])
 
-
-elif "-" in args.year:
-    year = start_year
-    total = 0
-
-    if start_year > end_year:
-      print("The start of the year range cannot be lower than the end")
-
-
-    with alive_bar(total = end_year - start_year + 1) as bar:
-      while year <= end_year:
-        bar.title(f"Counting results from {year}...")
-        total += get_total_dramas(f"{base_url}/released-in-{year}.html")
-        year += 1
-        bar()
-
-    year = start_year
+  if args.act:
+    actor = args.act.lower().strip().replace(" ","-")
+    URL = f"{base_url}/star/{actor}"
+    soup = soupify_url(URL)
+    total = get_total_dramas(URL)
 
     with alive_bar(total) as bar:
-      while year <= end_year:
-        drama_results = drama_results + parse_dramas_per_year(year, bar)
-        year += 1
+      parse_dramas_on_page(soup, drama_results, bar)
 
-else:
-  total = get_total_dramas(f"{base_url}/released-in-{args.year}.html")  
-  with alive_bar(total) as bar:
-    drama_results = parse_dramas_per_year(args.year, bar)
 
-for drama in drama_results:
-  if args.year:
-    if "-" in args.year:
-      if int(drama.year) < start_year or int(drama.year) > end_year:
-        continue
-    elif drama.year != args.year:
-      continue 
-  if args.genre and drama.genre.lower() != args.genre.lower():
-    continue
-  if args.country and drama.country.lower() != args.country.lower():
-    continue
-  if args.act and args.act.lower() not in drama.actors.lower():
-    continue
-  
-  drama.print_data(args.ep, args.newer, args.noact)
+  elif "-" in args.year:
+      year = start_year
+      total = 0
+
+      if start_year > end_year:
+        print("The start of the year range cannot be lower than the end")
+
+
+      with alive_bar(total = end_year - start_year + 1) as bar:
+        while year <= end_year:
+          bar.title(f"Counting results from {year}...")
+          total += get_total_dramas(f"{base_url}/released-in-{year}.html")
+          year += 1
+          bar()
+
+      year = start_year
+
+      with alive_bar(total) as bar:
+        while year <= end_year:
+          drama_results = drama_results + parse_dramas_per_year(year, bar)
+          year += 1
+
+  else:
+    total = get_total_dramas(f"{base_url}/released-in-{args.year}.html")  
+    with alive_bar(total) as bar:
+      drama_results = parse_dramas_per_year(args.year, bar)
+
+  for drama in drama_results:
+    if args.year:
+      if "-" in args.year:
+        if int(drama.year) < start_year or int(drama.year) > end_year:
+          continue
+      elif drama.year != args.year:
+        continue 
+    if args.genre and drama.genre.lower() != args.genre.lower():
+      continue
+    if args.country and drama.country.lower() != args.country.lower():
+      continue
+    if args.act and args.act.lower() not in drama.actors.lower():
+      continue
+    
+    drama.print_data(args.ep, args.newer, args.noact)
 
