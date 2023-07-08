@@ -2,23 +2,6 @@
 
 This is a past excercise I have completed, moved to a public repo in order to demonstrate python skills.
 
-### Setup
-
-```
-# Create virtual environment
-python -m venv venv
-# Activate Virtual Environment
-source venv/bin/activate
-# Install dependencies
-python -m pip install requests beautifulsoup4
-...
-# Example run for 1996
-python scrap.py 1996
-...
-# Exit from virtual Environment
-deactivate
-```
-
 ## NAME
 
 scrap.py - Python web scraping program for extracting information from the Dramacool website
